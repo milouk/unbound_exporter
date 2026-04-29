@@ -1,3 +1,57 @@
+# milouk/unbound-exporter
+
+[![Docker Hub](https://img.shields.io/docker/v/milouk/unbound-exporter?sort=semver&label=Docker%20Hub)](https://hub.docker.com/r/milouk/unbound-exporter)
+[![Docker Pulls](https://img.shields.io/docker/pulls/milouk/unbound-exporter)](https://hub.docker.com/r/milouk/unbound-exporter)
+[![GitHub Actions](https://github.com/milouk/unbound_exporter/actions/workflows/docker-release.yml/badge.svg)](https://github.com/milouk/unbound_exporter/actions/workflows/docker-release.yml)
+
+Fork of [letsencrypt/unbound_exporter](https://github.com/letsencrypt/unbound_exporter) with automated Docker image builds published to [Docker Hub](https://hub.docker.com/r/milouk/unbound-exporter) on every upstream release.
+
+## Docker
+
+```bash
+docker run -d \
+  --name unbound-exporter \
+  -p 9167:9167 \
+  -v /path/to/unbound_server.pem:/etc/unbound_server.pem \
+  -v /path/to/unbound_control.pem:/etc/unbound_control.pem \
+  -v /path/to/unbound_control.key:/etc/unbound_control.key \
+  milouk/unbound-exporter:latest \
+  -unbound.host tcp://unbound:8953 \
+  -unbound.ca /etc/unbound_server.pem \
+  -unbound.cert /etc/unbound_control.pem \
+  -unbound.key /etc/unbound_control.key
+```
+
+### Docker Compose
+
+```yaml
+services:
+  unbound-exporter:
+    image: milouk/unbound-exporter:latest
+    container_name: unbound-exporter
+    read_only: true
+    command: >
+      -unbound.host tcp://unbound:8953
+      -unbound.ca /etc/unbound_server.pem
+      -unbound.cert /etc/unbound_control.pem
+      -unbound.key /etc/unbound_control.key
+    volumes:
+      - /data/unbound/unbound_server.pem:/etc/unbound_server.pem
+      - /data/unbound/unbound_control.pem:/etc/unbound_control.pem
+      - /data/unbound/unbound_control.key:/etc/unbound_control.key
+```
+
+### Tags
+
+| Tag | Description |
+|-----|-------------|
+| `latest` | Latest stable release |
+| `0.6.0` | Specific upstream version |
+
+Automated builds run daily — a new image is pushed whenever [letsencrypt/unbound_exporter](https://github.com/letsencrypt/unbound_exporter) publishes a new release.
+
+- - - -
+
 # Prometheus Unbound exporter
 
 This repository provides code for a simple Prometheus metrics exporter
